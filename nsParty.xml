@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="www.dream.bbs.party.mapper.PartyMapper">
+	<resultMap type="www.dream.bbs.party.model.PartyVO"
+		extends="nsEntity.rmMasterEntity" id="rmPartyVO">
+		<result property="name" column="name" />
+		<result property="sex" column="sex" />
+		<collection property="listContactPoint"
+			resultMap="rmContactPointVO">
+		</collection>
+		<discriminator javaType="String" column="descrim">
+			<case value="Member" resultMap="rmMemberVO" />
+			<case value="Manager" resultMap="rmManagerVO" />
+		</discriminator>
+	</resultMap>
+
+	<resultMap id="rmMemberVO" extends="rmPartyVO"
+		type="www.dream.bbs.party.model.MemberVO" />
+	<resultMap id="rmManagerVO" extends="rmPartyVO"
+		type="www.dream.bbs.party.model.ManagerVO" />
+
+	<resultMap id="rmContactPointVO"
+		type="www.dream.bbs.party.model.ContactPointVO">
+		<result property="cpType" column="cp_type" />
+		<result property="cpVal" column="cp_val" />
+	</resultMap>
+
+	<!-- public List<PartyVO> listAll(); -->
+	<select id="listAll" resultMap="rmPartyVO">
+		SELECT *
+		FROM T_party p LEFT OUTER JOIN T_contact_Point cp
+		ON p.id = cp.owner_id
+
+	</select>
+</mapper>
+
+
+ 
